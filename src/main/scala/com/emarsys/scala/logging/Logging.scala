@@ -50,7 +50,7 @@ trait LogJsonProtocol extends DefaultJsonProtocol {
 
 class Logger[T](serviceName: String)(clazz: Class[T]) extends LogJsonProtocol {
 
-	private val logger = LoggerFactory.getLogger(clazz)
+	protected lazy val logger = LoggerFactory.getLogger(clazz)
 
 	def debug(logParameter: => LogParameter): Unit =
 		if (logger.isDebugEnabled) logger.debug(includeLogData(logParameter), logParameter.message)

@@ -20,10 +20,11 @@ scalacOptions ++= Seq(
 libraryDependencies ++= {
 	val scalaTestV = "3.0.5"
 	Seq(
-		"net.logstash.logback" % "logstash-logback-encoder" % "4.11",
-		"ch.qos.logback" % "logback-classic" % "1.2.3",
-		"io.spray" %% "spray-json" % "1.3.4",
-		"org.scalatest" %% "scalatest" % scalaTestV % "test"
+		"net.logstash.logback" %  "logstash-logback-encoder" % "4.11",
+		"ch.qos.logback"       %  "logback-classic"          % "1.2.3",
+		"io.spray"             %% "spray-json"               % "1.3.4",
+		"org.scalatest"        %% "scalatest"                % scalaTestV % "test",
+    "org.mockito"          %  "mockito-core"             % "2.16.0"   % "test"
 	)
 }
 
