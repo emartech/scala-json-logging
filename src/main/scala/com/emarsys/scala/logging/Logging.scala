@@ -45,6 +45,7 @@ trait LogJsonProtocol extends DefaultJsonProtocol {
 
 		private def truncateText(text: String) = text.take(PARAMETER_MAX_LENGTH_BYTES)
 	}
+
 }
 
 class Logger[T](serviceName: String)(clazz: Class[T]) extends LogJsonProtocol {
