@@ -25,7 +25,7 @@ object LogParameter {
 }
 
 trait LogJsonProtocol extends DefaultJsonProtocol {
-	val PARAMETER_MAX_LENGTH_BYTES = 2000
+	val textParameterMaxLength: Int
 
 	implicit object anyJsonWriter extends JsonWriter[Any] {
 		override def write(obj: Any): JsValue = obj match {
@@ -43,7 +43,7 @@ trait LogJsonProtocol extends DefaultJsonProtocol {
 			case o => JsString(truncateText(o.toString))
 		}
 
-		private def truncateText(text: String) = text.take(PARAMETER_MAX_LENGTH_BYTES)
+		private def truncateText(text: String) = text.take(textParameterMaxLength)
 	}
 
 }
@@ -51,6 +51,8 @@ trait LogJsonProtocol extends DefaultJsonProtocol {
 class Logger[T](serviceName: String)(clazz: Class[T]) extends LogJsonProtocol {
 
 	protected lazy val logger = LoggerFactory.getLogger(clazz)
+
+	override val textParameterMaxLength: Int = Logger.TEXT_PARAMETER_MAX_LENGTH
 
 	def debug(logParameter: => LogParameter): Unit =
 		if (logger.isDebugEnabled) logger.debug(includeLogData(logParameter), logParameter.message)
@@ -73,4 +75,5 @@ class Logger[T](serviceName: String)(clazz: Class[T]) extends LogJsonProtocol {
 
 object Logger {
 	def apply[T](serviceName: String)(clazz: Class[T]): Logger[T] = new Logger(serviceName)(clazz)
+	val TEXT_PARAMETER_MAX_LENGTH = 2000
 }

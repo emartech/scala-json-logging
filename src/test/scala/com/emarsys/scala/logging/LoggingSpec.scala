@@ -14,8 +14,10 @@ class LoggingSpec extends WordSpec with Matchers with MockitoSugar {
 
   class LoggingTestScope {
     val loggerMock = mock[org.slf4j.Logger]
-    val logger = new Logger("testService")(classOf[LoggingSpec]) {
+    val textMaxLength = Logger.TEXT_PARAMETER_MAX_LENGTH
+    lazy val logger = new Logger("testService")(classOf[LoggingSpec]) {
       override protected lazy val logger = loggerMock
+      override val textParameterMaxLength = textMaxLength
     }
   }
 
@@ -152,6 +154,23 @@ class LoggingSpec extends WordSpec with Matchers with MockitoSugar {
     captor.getValue.iterator().asScala.toList.map(_.toString) should be(Seq(
       """arg1="value1"""",
       """arg2="value2""""
+    ))
+  }
+
+  "truncate long text parameter" in new LoggingTestScope {
+    override val textMaxLength: Int = 5
+
+    when(loggerMock.isErrorEnabled()).thenReturn(true)
+
+    logger.error(LogParameter("Log")
+      .addParameters("arg1" -> "x" * 10)
+    )
+
+    val captor: ArgumentCaptor[LogstashMarker] = ArgumentCaptor.forClass(classOf[LogstashMarker])
+    verify(loggerMock).error(captor.capture(), any[String])
+
+    captor.getValue.iterator().asScala.toList.map(_.toString) should be(Seq(
+      """arg1="xxxxx""""
     ))
   }
 
