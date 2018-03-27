@@ -117,11 +117,8 @@ class LoggingSpec extends WordSpec with Matchers with MockitoSugar {
     true -> "true",
     false -> "false",
     (null, "null"),
-    Map(
-      "hello" -> "world",
-      "number" -> 9,
-    ) ->
-      """{"hello":"world","number":9}"""
+    Map("h" -> "world", "number" -> 9) -> """{"hello":"world","number":9}""",
+    Seq("s", 1, 2L, 22f, 33.3d, true, false, null, Map("m" -> 777)) -> """["s",1,2,22.0,33.3,true,false,null,{"m":777}]"""
   ).foreach { case (input, output) =>
     s"write error in json format - $output" in new LoggingTestScope {
 
